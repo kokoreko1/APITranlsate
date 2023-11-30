@@ -21,11 +21,13 @@ class MainActivity : AppCompatActivity() {
         .addConverterFactory(GsonConverterFactory.create())
         .build()
 
-    val translationService: TranslationApi = retrofit.create(TranslationApi::class.java)
+    val translationService = retrofit.create(TranslationApi::class.java)
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
+
         setContentView(R.layout.activity_main)
 
         val editText1 = findViewById<EditText>(R.id.editText1)
@@ -37,26 +39,21 @@ class MainActivity : AppCompatActivity() {
         val textView1 = findViewById<TextView>(R.id.textView1)
 
         buttonYoda.setOnClickListener {
-            //val textYoda = yodaTranslate(editText1.text)
-            //textView1.setText("sdfsdfsf")
-            yodaTranslate("sdfsdfsfsff")
+            yodaTranslate("Creating Android applications is very easy and interesting!")
         }
 
         buttonMorse.setOnClickListener {
-            //val textMorse = morseTranslate(editText1.text)
-            //textView1.setText("sdfsdfsdfsd")
-            morseTranslate("sdfsdfsfsff")
+            morseTranslate("Hello")
         }
-
 
     }
 
-    private fun yodaTranslate(text: String) {
+    fun yodaTranslate(text: String) {
         translationService
             .translateToYoda(TranslationRequest(text))
             .enqueue(object : Callback<TranslationResponse> {
                 override fun onResponse(call: Call<TranslationResponse>,
-                                        response: Response<TranslationResponse>){
+                                        response: Response<TranslationResponse>) {
                     Log.d("TRANSLATION_LOG", "Yoda says: ${response.body()?.contents?.translated}")
                 }
 
@@ -66,16 +63,19 @@ class MainActivity : AppCompatActivity() {
             })
     }
 
-    private fun morseTranslate(text: String) {
+    fun morseTranslate(text: String) {
         translationService
             .translateToMorse(TranslationRequest(text))
-            .enqueue(object : Callback<TranslationResponse>{
+            .enqueue(object : Callback<TranslationResponse> {
                 override fun onResponse(call: Call<TranslationResponse>,
-                                        response: Response<TranslationResponse>){
-                    Log.d("TRANSLATION_LOG", "in Morse code: ${response.body()?.contents?.translated}")
+                                        response: Response<TranslationResponse>) {
+                    Log.d("TRANSLATION_LOG", "${response.body()?.contents?.text} in Morse code: ${response.body()?.contents?.translated}")
                 }
+
                 override fun onFailure(call: Call<TranslationResponse>, t: Throwable) {
                 }
+
             })
     }
+
 }
